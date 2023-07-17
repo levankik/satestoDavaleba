@@ -19,4 +19,10 @@ public interface GroupService {
     List<Group> getGroups();
 
     Group assignTeacherToGroup(int groupId, int teacherId);
+
+    Group removeTeacherFromGroup(int groupId, int teacherId);
+
+    Group assignStudentToGroup(int groupId, int id);
+
+    Group removeStudentFromGroup(int groupId, int id);
 }

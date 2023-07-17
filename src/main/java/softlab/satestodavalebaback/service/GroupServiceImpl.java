@@ -3,9 +3,11 @@ package softlab.satestodavalebaback.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import softlab.satestodavalebaback.entity.Group;
+import softlab.satestodavalebaback.entity.Student;
 import softlab.satestodavalebaback.entity.Teacher;
 import softlab.satestodavalebaback.exeption.NotFoundException;
 import softlab.satestodavalebaback.repository.GroupRepository;
+import softlab.satestodavalebaback.repository.StudentRepository;
 import softlab.satestodavalebaback.repository.TeacherRepository;
 
 import java.security.InvalidParameterException;
@@ -18,6 +20,7 @@ public class GroupServiceImpl implements GroupService {
 
     private final GroupRepository groupRepository;
     private final TeacherRepository teacherRepository;
+    private final StudentRepository studentRepository;
 
     @Override
     public Group add(Group group) {
@@ -69,6 +72,45 @@ public class GroupServiceImpl implements GroupService {
         teacherSet = group.getAssignedTeachers();
         teacherSet.add(teacher);
         group.setAssignedTeachers(teacherSet);
+        return groupRepository.save(group);
+    }
+
+    @Override
+    public Group removeTeacherFromGroup(int groupId, int teacherId) {
+        Set<Teacher> teacherSet = null;
+        Group group = groupRepository.findByGroupId(groupId)
+                .orElseThrow(() -> new NotFoundException("Group is not found"));
+        Teacher teacher = teacherRepository.findByTeacherId(teacherId).
+                orElseThrow(() -> new NotFoundException("Teacher is not found"));
+        teacherSet = group.getAssignedTeachers();
+        teacherSet.remove(teacher);
+        group.setAssignedTeachers(teacherSet);
+        return groupRepository.save(group);
+    }
+
+    @Override
+    public Group assignStudentToGroup(int groupId, int id) {
+        Set<Student> studentSet = null;
+        Group group = groupRepository.findByGroupId(groupId)
+                .orElseThrow(() -> new NotFoundException("Group is not found"));
+        Student student = studentRepository.findById(id).
+                orElseThrow(() -> new NotFoundException("Student is not found"));
+        studentSet = group.getAssignedStudents();
+        studentSet.add(student);
+        group.setAssignedStudents(studentSet);
+        return groupRepository.save(group);
+    }
+
+    @Override
+    public Group removeStudentFromGroup(int groupId, int id) {
+        Set<Student> studentSet = null;
+        Group group = groupRepository.findByGroupId(groupId)
+                .orElseThrow(() -> new NotFoundException("Group is not found"));
+        Student student = studentRepository.findById(id).
+                orElseThrow(() -> new NotFoundException("Student is not found"));
+        studentSet = group.getAssignedStudents();
+        studentSet.remove(student);
+        group.setAssignedStudents(studentSet);
         return groupRepository.save(group);
     }
 

@@ -9,7 +9,7 @@ public interface StudentService {
 
     Student getStudent(StudentSearchParams studentSearchParams);
 
-    Student update(int idS, Student student);
+    Student update(Student student);
 
     void delete(int id);
 

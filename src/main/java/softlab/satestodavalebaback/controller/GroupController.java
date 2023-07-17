@@ -53,4 +53,30 @@ public class GroupController {
         return groupService.assignTeacherToGroup(groupId, teacherId);
     }
 
+    @PutMapping ("/{groupId}/group/{teacherId}/remove")
+    public Group removeTeacherFromGroup(
+            @PathVariable int groupId,
+            @PathVariable int teacherId
+    ) {
+        return groupService.removeTeacherFromGroup(groupId, teacherId);
+    }
+
+    @PutMapping ("/{groupId}/group/student/{id}")
+    public Group assignStudentToGroup(
+            @PathVariable int groupId,
+            @PathVariable int id
+    ) {
+        return groupService.assignStudentToGroup(groupId, id);
+    }
+
+    @PutMapping ("/{groupId}/group/student/{id}/remove")
+    public Group removeStudentFromGroup(
+            @PathVariable int groupId,
+            @PathVariable int id
+    ) {
+        return groupService.removeStudentFromGroup(groupId, id);
+    }
+
+
+
 }

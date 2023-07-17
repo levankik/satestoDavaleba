@@ -1,8 +1,11 @@
 package softlab.satestodavalebaback.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import java.util.Date;
 
@@ -27,4 +30,9 @@ public class Student {
     private String mail;
     @Column(name = "birth_date",  nullable = false)
     private Date birthDate;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "group_id", referencedColumnName = "id")
+    private Group group;
 }

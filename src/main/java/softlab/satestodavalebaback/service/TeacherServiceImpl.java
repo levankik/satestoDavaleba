@@ -28,8 +28,10 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public Teacher update(int teacherId, Teacher teacher ) {
-        var foundTeacher = getTeacherByTeacherId(teacherId);
+    public Teacher update(Teacher teacher ) {
+//        var foundTeacher = getTeacherByTeacherId(teacherId);
+        var foundTeacher =   teacherRepository.findByIdNumber(teacher.getIdNumber())
+                .orElseThrow(() -> new NotFoundException("Teacher not found"));
         foundTeacher.setName(teacher.getName());
         foundTeacher.setLastName(teacher.getLastName());
         foundTeacher.setIdNumber(teacher.getIdNumber());
@@ -44,14 +46,14 @@ public class TeacherServiceImpl implements TeacherService {
         teacherRepository.deleteById(teacherId);
     }
 
-    @Override
-    public Teacher getTeacherByTeacherId(int teacherID) {
-        if (teacherID < 1) {
-            throw new InvalidParameterException("teacherId must be positive integer");
-        }
-        return  teacherRepository.findByTeacherId(teacherID)
-                .orElseThrow(() -> new NotFoundException("Teacher not found"));
-    }
+//    @Override
+//    public Teacher getTeacherByTeacherId(int teacherID) {
+//        if (teacherID < 1) {
+//            throw new InvalidParameterException("teacherId must be positive integer");
+//        }
+//        return  teacherRepository.findByTeacherId(teacherID)
+//                .orElseThrow(() -> new NotFoundException("Teacher not found"));
+//    }
 
     @Override
     public List<Teacher> getTeachers() {

@@ -10,7 +10,7 @@ import softlab.satestodavalebaback.service.TeacherService;
 
 import java.util.List;
 
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/teachers")
 @RequiredArgsConstructor
@@ -29,9 +29,9 @@ public class TeacherController {
         return teacherService.getTeacher(teacherSearchParams);
     }
 
-    @PutMapping("/{teacherId}")
-    public Teacher update(@RequestBody Teacher teacher, @PathVariable int teacherId) {
-        return teacherService.update(teacherId, teacher);
+    @PutMapping()
+    public Teacher update(@RequestBody Teacher teacher) {
+        return teacherService.update(teacher);
     }
 
     @DeleteMapping("/{teacherId}")

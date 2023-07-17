@@ -1,10 +1,12 @@
 package softlab.satestodavalebaback.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -29,5 +31,9 @@ public class Group {
            inverseJoinColumns = @JoinColumn(name = "teacher_id")
     )
     private Set<Teacher> assignedTeachers = new HashSet<>();
+
+
+    @OneToMany (mappedBy = "group", fetch = FetchType.EAGER)
+    private Set<Student> assignedStudents = new HashSet<>();
 
 }

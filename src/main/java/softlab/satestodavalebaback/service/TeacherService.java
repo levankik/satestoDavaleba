@@ -11,11 +11,11 @@ public interface TeacherService {
 
     Teacher getTeacher(TeacherSearchParams teacherSearchParams);
 
-    Teacher update(int teacherId, Teacher teacher);
+    Teacher update(Teacher teacher);
 
     void delete(int teacherId);
 
-    Teacher  getTeacherByTeacherId(int teacherId);
+//    Teacher  getTeacherByTeacherId(int teacherId);
 
     List<Teacher> getTeachers();
 

@@ -33,8 +33,9 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student update(int id, Student student ) {
-        var foundStudent = getStudentById(id);
+    public Student update(Student student ) {
+        var foundStudent =  studentRepository.findByIdNumber(student.getIdNumber())
+                .orElseThrow(() -> new NotFoundException("Student not found"));;
         foundStudent.setName(student.getName());
         foundStudent.setLastName(student.getLastName());
         foundStudent.setIdNumber(student.getIdNumber());
