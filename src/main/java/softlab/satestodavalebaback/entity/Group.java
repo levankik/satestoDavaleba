@@ -32,8 +32,7 @@ public class Group {
     )
     private Set<Teacher> assignedTeachers = new HashSet<>();
 
-
-    @OneToMany (mappedBy = "group", fetch = FetchType.EAGER)
+    @OneToMany (mappedBy = "group", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private Set<Student> assignedStudents = new HashSet<>();
 
 }

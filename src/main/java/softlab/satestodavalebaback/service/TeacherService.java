@@ -1,22 +1,21 @@
 package softlab.satestodavalebaback.service;
 
-import softlab.satestodavalebaback.DTO.TeacherSearchParams;
 import softlab.satestodavalebaback.entity.Teacher;
 
+import java.util.Date;
 import java.util.List;
 
 
 public interface TeacherService {
-    Teacher add(Teacher teacher);
 
-    Teacher getTeacher(TeacherSearchParams teacherSearchParams);
+    Teacher add (Teacher teacher);
 
-    Teacher update(Teacher teacher);
+    Teacher update (Teacher teacher, int teacherId);
 
-    void delete(int teacherId);
+    String delete (int teacherId);
 
-//    Teacher  getTeacherByTeacherId(int teacherId);
+    Teacher  getById (int teacherId);
 
-    List<Teacher> getTeachers();
+    List<Teacher> getByParams (String name, String lastName, String idNumber, Date birthDate);
 
 }

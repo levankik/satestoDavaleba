@@ -7,6 +7,5 @@ import softlab.satestodavalebaback.entity.Teacher;
 import java.util.Optional;
 
 public interface StudentRepository extends JpaRepository<Student, Integer> {
-    Optional<Student> findByIdNumber(String idNumber);
     Optional<Student> findById(int id);
 }

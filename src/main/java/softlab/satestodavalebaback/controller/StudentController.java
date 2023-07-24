@@ -1,15 +1,14 @@
 package softlab.satestodavalebaback.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-import softlab.satestodavalebaback.DTO.StudentSearchParams;
-import softlab.satestodavalebaback.entity.Group;
 import softlab.satestodavalebaback.entity.Student;
-import softlab.satestodavalebaback.entity.Teacher;
 import softlab.satestodavalebaback.service.StudentService;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -20,28 +19,34 @@ public class StudentController {
 
     private final StudentService studentService;
 
-    @PostMapping()
-    public ResponseEntity<Student> add(@RequestBody Student student) {
+    @PostMapping("/save")
+    public ResponseEntity<?> add(@RequestBody Student student) {
         studentService.add(student);
-        var location = UriComponentsBuilder.fromPath("/students/" + student.getId()).build().toUri();
+        var location = UriComponentsBuilder.fromPath("/students/saveStudent/" + student.getId()).build().toUri();
         return ResponseEntity.created(location).body(student);
     }
 
-    @GetMapping()
-    public Student getStudent(@RequestBody StudentSearchParams studentSearchParams) {
-        return studentService.getStudent(studentSearchParams);
+    @GetMapping("/delete/{id}")
+    public ResponseEntity<?> delete (@PathVariable int id) {
+        return new ResponseEntity<>(studentService.delete(id), HttpStatus.OK);
     }
 
-    @PutMapping()
-    public Student update(@RequestBody Student student) {
-        return studentService.update(student);
+    @PostMapping("/edit/{id}")
+    public ResponseEntity<?> update (@RequestBody Student student, @PathVariable int id) {
+        return new ResponseEntity<> (studentService.update(student, id), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Student> delete(@PathVariable int id) {
-        studentService.delete(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getById (@PathVariable Integer id) {
+        return new ResponseEntity<>(studentService.getStudentById(id), HttpStatus.OK);
     }
 
-
+    @GetMapping("")
+    public List<Student> getByParams(@RequestParam(value = "name", required = false) String name,
+                                     @RequestParam (value = "lastName", required = false) String  lastName,
+                                     @RequestParam (value = "idNumber", required = false) String idNumber,
+                                     @RequestParam (value = "birthDate", required = false) Date birthDate
+                                     ) {
+        return studentService.getByParams(name, lastName, idNumber, birthDate);
+    }
 }
