@@ -2,8 +2,15 @@ package softlab.satestodavalebaback.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
 
 import java.util.HashSet;
 import java.util.List;
@@ -19,10 +26,16 @@ public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "groupIdGenerator")
     @Column(name = "id", nullable = false)
-    private int groupId;
+    private int id;
+
     @Column(name = "name", nullable = false)
+    @NotEmpty(message = "Name is mandatory")
+    @Size (max = 30)
     private String name;
+
     @Column(name = "group_number", nullable = false)
+    @NotNull(message = "GroupNumber is mandatory")
+    @Range(min = 1, max = 200) // my faculty group numbers were three-digit
     private int groupNumber;
 
     @ManyToMany

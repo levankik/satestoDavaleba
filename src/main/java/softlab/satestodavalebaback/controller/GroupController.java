@@ -1,14 +1,16 @@
 package softlab.satestodavalebaback.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+import softlab.satestodavalebaback.DTO.SearchParams;
 import softlab.satestodavalebaback.entity.Group;
 import softlab.satestodavalebaback.service.GroupService;
-
-import java.util.List;
-
 
 @RestController
 @RequestMapping("/groups")
@@ -17,64 +19,64 @@ public class GroupController {
 
     private final GroupService groupService;
 
-    @PostMapping()
-    public ResponseEntity<Group> add(@RequestBody Group group) {
+    @PostMapping("/save")
+    public ResponseEntity<?> add(@Valid @RequestBody Group group) {
         groupService.add(group);
-        var location = UriComponentsBuilder.fromPath("/groups/" + group.getGroupId()).build().toUri();
+        var location = UriComponentsBuilder.fromPath("/groups/" + group.getId()).build().toUri();
         return ResponseEntity.created(location).body(group);
     }
 
-    @GetMapping("/{groupNumber}")
-    public Group getGroup(@PathVariable int groupNumber) {
-        return groupService.getGroup(groupNumber);
+    @GetMapping("/delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable int id) {
+        return new ResponseEntity<> (groupService.delete(id), HttpStatus.OK);
     }
 
-    @PutMapping("/{groupId}")
-    public Group update(@RequestBody Group group, @PathVariable int groupId) {
-        return groupService.update(groupId, group);
+    @PostMapping("/edit/{id}")
+    public ResponseEntity<?> update(@RequestBody Group group, @PathVariable int id) {
+        return new ResponseEntity<> (groupService.update(group, id), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{groupId}")
-    public ResponseEntity<Group> delete(@PathVariable int groupId) {
-        groupService.delete(groupId);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getById (@PathVariable Integer id) {
+        return new ResponseEntity<>(groupService.getById(id), HttpStatus.OK);
     }
 
-    @GetMapping()
-    public List<Group> getGroups() {
-        return groupService.getGroups();
+    @GetMapping("")
+    public Page<?> getAll(SearchParams params, @RequestParam(required = false, defaultValue = "0") int page,
+                          @RequestParam(required = false, defaultValue = "10") int size) {
+        return groupService.getAll(params, PageRequest.of(page, size));
     }
 
-    @PutMapping ("/{groupId}/group/{teacherId}")
-    public Group assignTeacherToGroup(
+    @PutMapping ("/{groupId}/group/{id}")
+    public Group assignTeacher(
             @PathVariable int groupId,
-            @PathVariable int teacherId
+            @PathVariable int id
     ) {
-        return groupService.assignTeacherToGroup(groupId, teacherId);
+        return groupService.assignTeacher(groupId, id);
     }
 
-    @PutMapping ("/{groupId}/group/{teacherId}/remove")
-    public Group removeTeacherFromGroup(
+    @PutMapping ("/{groupId}/group/{id}/remove")
+    public Group removeTeacher(
             @PathVariable int groupId,
-            @PathVariable int teacherId
+            @PathVariable int id
     ) {
-        return groupService.removeTeacherFromGroup(groupId, teacherId);
+        return groupService.removeTeacher(groupId, id);
     }
 
     @PutMapping ("/{groupId}/group/student/{id}")
-    public Group assignStudentToGroup(
+    public Group assignStudent(
             @PathVariable int groupId,
             @PathVariable int id
     ) {
-        return groupService.assignStudentToGroup(groupId, id);
+        return groupService.assignStudent(groupId, id);
     }
 
     @PutMapping ("/{groupId}/group/student/{id}/remove")
-    public Group removeStudentFromGroup(
+    public Group removeStudent(
             @PathVariable int groupId,
             @PathVariable int id
     ) {
-        return groupService.removeStudentFromGroup(groupId, id);
+        return groupService.removeStudent(groupId, id);
     }
 
 

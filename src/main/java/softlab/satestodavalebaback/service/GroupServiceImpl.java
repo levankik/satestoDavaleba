@@ -1,7 +1,12 @@
 package softlab.satestodavalebaback.service;
 
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import softlab.satestodavalebaback.DTO.SearchParams;
 import softlab.satestodavalebaback.entity.Group;
 import softlab.satestodavalebaback.entity.Student;
 import softlab.satestodavalebaback.entity.Teacher;
@@ -11,7 +16,6 @@ import softlab.satestodavalebaback.repository.StudentRepository;
 import softlab.satestodavalebaback.repository.TeacherRepository;
 
 import java.security.InvalidParameterException;
-import java.util.List;
 import java.util.Set;
 
 @Service
@@ -19,8 +23,8 @@ import java.util.Set;
 public class GroupServiceImpl implements GroupService {
 
     private final GroupRepository groupRepository;
-    private final TeacherRepository teacherRepository;
     private final StudentRepository studentRepository;
+    private final TeacherRepository teacherRepository;
 
     @Override
     public Group add(Group group) {
@@ -28,46 +32,50 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Group getGroup(int groupNumber) {
-        return groupRepository.findByGroupNumber(groupNumber)
-                .orElseThrow(() -> new NotFoundException("Group not found"));
-    }
-
-    @Override
-    public Group update(int groupId, Group group) {
-        var foundGroup = getGroupById(groupId);
+    public Group update(Group group, int id) {
+        var foundGroup = getById(id);
         foundGroup.setName(group.getName());
         foundGroup.setGroupNumber(group.getGroupNumber());
         return groupRepository.save(foundGroup);
     }
 
     @Override
-    public void delete(int groupId) {
-        Group foundGroup = groupRepository.findByGroupId(groupId)
-                .orElseThrow(() -> new NotFoundException("Group with given groupId is not found"));
-        groupRepository.deleteById(groupId);
+    public String delete (int id) {
+        Group foundGroup = groupRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Group with given id is not found"));
+        groupRepository.delete(foundGroup);
+        return "Group delete successfully";
     }
 
     @Override
-    public Group getGroupById(int groupId) {
-        if (groupId < 1) {
-            throw new InvalidParameterException("groupId must be positive integer");
+    public Group getById(int id) {
+        if (id < 1) {
+            throw new InvalidParameterException("Is must be positive integer");
         }
-        return  groupRepository.findById(groupId)
+        return  groupRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Group not found"));
     }
 
     @Override
-    public List<Group> getGroups() {
-        return groupRepository.findAll();
+    public Page<Group> getAll (SearchParams params, Pageable pageable) {
+        return groupRepository.findAll((root, query, cb) -> {
+            Predicate predicate = cb.conjunction();
+            if (StringUtils.isNotEmpty(params.getName())) {
+                predicate = cb.and(predicate, cb.equal(root.get("name"), params.getName()));
+            }
+            if (StringUtils.isNotEmpty(params.getIdNumber())) {
+                predicate = cb.and(predicate, cb.equal(root.get("idNumber"), params.getIdNumber()));
+            }
+            return predicate;
+        }, pageable);
     }
 
     @Override
-    public Group assignTeacherToGroup(int groupId, int teacherId) {
+    public Group assignTeacher(int groupId, int id) {
         Set<Teacher> teacherSet = null;
-        Group group = groupRepository.findByGroupId(groupId)
+        Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new NotFoundException("Group is not found"));
-        Teacher teacher = teacherRepository.findByTeacherId(teacherId).
+        Teacher teacher = teacherRepository.findById(id).
                 orElseThrow(() -> new NotFoundException("Teacher is not found"));
         teacherSet = group.getAssignedTeachers();
         teacherSet.add(teacher);
@@ -76,11 +84,11 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Group removeTeacherFromGroup(int groupId, int teacherId) {
+    public Group removeTeacher(int groupId, int id) {
         Set<Teacher> teacherSet = null;
-        Group group = groupRepository.findByGroupId(groupId)
+        Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new NotFoundException("Group is not found"));
-        Teacher teacher = teacherRepository.findByTeacherId(teacherId).
+        Teacher teacher = teacherRepository.findById(id).
                 orElseThrow(() -> new NotFoundException("Teacher is not found"));
         teacherSet = group.getAssignedTeachers();
         teacherSet.remove(teacher);
@@ -89,9 +97,9 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Group assignStudentToGroup(int groupId, int id) {
+    public Group assignStudent(int groupId, int id) {
         Set<Student> studentSet = null;
-        Group group = groupRepository.findByGroupId(groupId)
+        Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new NotFoundException("Group is not found"));
         Student student = studentRepository.findById(id).
                 orElseThrow(() -> new NotFoundException("Student is not found"));
@@ -102,9 +110,9 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Group removeStudentFromGroup(int groupId, int id) {
+    public Group removeStudent(int groupId, int id) {
         Set<Student> studentSet = null;
-        Group group = groupRepository.findByGroupId(groupId)
+        Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new NotFoundException("Group is not found"));
         Student student = studentRepository.findById(id).
                 orElseThrow(() -> new NotFoundException("Student is not found"));
@@ -113,5 +121,4 @@ public class GroupServiceImpl implements GroupService {
         group.setAssignedStudents(studentSet);
         return groupRepository.save(group);
     }
-
 }

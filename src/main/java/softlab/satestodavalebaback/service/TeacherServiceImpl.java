@@ -1,19 +1,23 @@
 package softlab.satestodavalebaback.service;
 
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import softlab.satestodavalebaback.DTO.SearchParams;
 import softlab.satestodavalebaback.entity.Teacher;
 import softlab.satestodavalebaback.exeption.NotFoundException;
 import softlab.satestodavalebaback.repository.TeacherRepository;
 
 import java.security.InvalidParameterException;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
+@Primary
 @Service
 @RequiredArgsConstructor
-public class TeacherServiceImpl implements TeacherService {
+public class TeacherServiceImpl implements StudentAndTeacherService<Teacher> {
     private final TeacherRepository teacherRepository;
 
     @Override
@@ -34,39 +38,40 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public String delete(int teacherId) {
-        Teacher teacher = teacherRepository.findById(teacherId)
+    public String delete(int id) {
+        Teacher teacher = teacherRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Teacher with given id is not found"));
         teacherRepository.delete(teacher);
         return "Teacher delete successfully";
     }
 
     @Override
-    public Teacher getById(int teacherId) {
-        if (teacherId < 1) {
-            throw new InvalidParameterException("teacherId must be positive integer");
+    public Teacher getById(int id) {
+        if (id < 1) {
+            throw new InvalidParameterException("Teacher id  must be positive integer");
         }
-        return  teacherRepository.findById(teacherId)
+        return teacherRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Teacher not found"));
     }
 
-
     @Override
-    public List<Teacher> getByParams(String name, String lastName, String idNumber, Date birthDate) {
-//        System.out.println(name);
-        var searchResult = teacherRepository.findAll();
-        System.out.println(searchResult); // here all right
-        searchResult.stream()
-                .filter(t -> t.getName().equals(name) ||
-                             t.getLastName().equals(lastName) ||
-                             t.getIdNumber().equals(idNumber) ||
-                             t.getBirthDate().equals(birthDate))
-                .collect(Collectors.toList());
-        System.out.println(searchResult);
-        return searchResult;
+    public Page<Teacher> getAll(SearchParams params, Pageable pageable) {
+        return teacherRepository.findAll((root, query, cb) -> {
+            Predicate predicate = cb.conjunction();
+            if (StringUtils.isNotEmpty(params.getName())) {
+                predicate = cb.and(predicate, cb.equal(root.get("name"), params.getName()));
+            }
+            if (StringUtils.isNotEmpty(params.getLastName())) {
+                predicate = cb.and(predicate, cb.equal(root.get("lastName"), params.getLastName()));
+            }
+            if (StringUtils.isNotEmpty(params.getIdNumber())) {
+                predicate = cb.and(predicate, cb.equal(root.get("idNumber"), params.getIdNumber()));
+            }
+            if (params.getBirthDate() != null) {
+                predicate = cb.and(predicate, cb.equal(root.get("birthDate"), params.getBirthDate()));
+            }
+            return predicate;
+        }, pageable);
     }
-
-
 }
-
 

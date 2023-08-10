@@ -1,52 +1,49 @@
 package softlab.satestodavalebaback.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+import softlab.satestodavalebaback.DTO.SearchParams;
 import softlab.satestodavalebaback.entity.Teacher;
-import softlab.satestodavalebaback.service.TeacherService;
-
-import java.util.Date;
-import java.util.List;
-
+import softlab.satestodavalebaback.service.StudentAndTeacherService;
 
 @RestController
 @RequestMapping("/teachers")
 @RequiredArgsConstructor
 public class TeacherController {
-    private final TeacherService teacherService;
+
+    private final StudentAndTeacherService<Teacher> studentAndTeacherService;
 
     @PostMapping("/save")
     public ResponseEntity<?> add(@RequestBody Teacher teacher) {
-        teacherService.add(teacher);
-        var location = UriComponentsBuilder.fromPath("/teachers/" + teacher.getTeacherId()).build().toUri();
+        studentAndTeacherService.add(teacher);
+        var location = UriComponentsBuilder.fromPath("/teachers/" + teacher.getId()).build().toUri();
         return ResponseEntity.created(location).body(teacher);
     }
 
     @GetMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable int id) {
-        return new ResponseEntity<>(teacherService.delete(id), HttpStatus.OK);
+        return new ResponseEntity<>(studentAndTeacherService.delete(id), HttpStatus.OK);
     }
 
     @PostMapping("/edit/{id}")
     public ResponseEntity<?> update(@RequestBody Teacher teacher, @PathVariable int id) {
-        return new ResponseEntity<> (teacherService.update(teacher, id), HttpStatus.CREATED);
+        return new ResponseEntity<> (studentAndTeacherService.update(teacher, id), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Integer id) {
-        return new ResponseEntity<>(teacherService.getById(id), HttpStatus.OK);
+        return new ResponseEntity<>(studentAndTeacherService.getById(id), HttpStatus.OK);
     }
 
     @GetMapping("")
-    public List<?> getByParams(@RequestParam (value = "name", required = false) String name,
-                                     @RequestParam (value = "lastName", required = false) String  lastName,
-                                     @RequestParam (value = "idNumber", required = false) String idNumber,
-                                     @RequestParam (value = "birthDate", required = false) Date birthDate
-                                     ) {
-        return teacherService.getByParams(name, lastName, idNumber, birthDate);
+    public Page<?> getAll(SearchParams params, @RequestParam(required = false, defaultValue = "0") int page,
+                                               @RequestParam(required = false, defaultValue = "10") int size) {
+        return studentAndTeacherService.getAll(params, PageRequest.of(page, size));
     }
 
 }
