@@ -13,6 +13,7 @@ public class SearchParams {
     private String name;
     private String lastName;
     private String idNumber;
+    private Integer groupNumber;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate birthDate;
 }

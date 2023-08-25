@@ -1,5 +1,7 @@
 package softlab.satestodavalebaback.service;
 
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -8,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import softlab.satestodavalebaback.DTO.SearchParams;
+import softlab.satestodavalebaback.entity.Group;
 import softlab.satestodavalebaback.entity.Teacher;
 import softlab.satestodavalebaback.exeption.NotFoundException;
 import softlab.satestodavalebaback.repository.TeacherRepository;
@@ -69,6 +72,11 @@ public class TeacherServiceImpl implements StudentAndTeacherService<Teacher> {
             }
             if (params.getBirthDate() != null) {
                 predicate = cb.and(predicate, cb.equal(root.get("birthDate"), params.getBirthDate()));
+            }
+            if (params.getGroupNumber() != null) {
+                Join<Teacher, Group>  teachers = root.join("group", JoinType.LEFT);
+                predicate = cb.and(predicate, cb.equal(teachers.get(" ").get("groupNumber"), params.getGroupNumber()));
+//                  predicate = cb.and(predicate, cb.equal(root.get("groupNumber"), params.getGroupNumber()));
             }
             return predicate;
         }, pageable);

@@ -47,23 +47,30 @@ public class GroupController {
         return groupService.getAll(params, PageRequest.of(page, size));
     }
 
-    @PutMapping ("/{groupId}/group/{id}")
+    @PostMapping ("/{groupNumber}/teachers/save/{id}")
     public Group assignTeacher(
-            @PathVariable int groupId,
+            @PathVariable int groupNumber,
             @PathVariable int id
     ) {
-        return groupService.assignTeacher(groupId, id);
+        return groupService.assignTeacher(groupNumber, id);
     }
 
-    @PutMapping ("/{groupId}/group/{id}/remove")
+    @GetMapping("/{groupNumber}/teachers")
+    public ResponseEntity<?> getAssignedTeachers (@PathVariable Integer groupNumber) {
+        return new ResponseEntity<>(groupService.getAssignedTeachers(groupNumber), HttpStatus.OK);
+    }
+
+    @PostMapping ("/{groupNumber}/teachers/remove/{id}")
     public Group removeTeacher(
-            @PathVariable int groupId,
+            @PathVariable int groupNumber,
             @PathVariable int id
     ) {
-        return groupService.removeTeacher(groupId, id);
+        return groupService.removeTeacher(groupNumber, id);
     }
 
-    @PutMapping ("/{groupId}/group/student/{id}")
+//    (API_URL + destination  + "/remove/" + id)
+
+    @PostMapping ("/{groupId}/save_student/{id}")
     public Group assignStudent(
             @PathVariable int groupId,
             @PathVariable int id
@@ -71,7 +78,12 @@ public class GroupController {
         return groupService.assignStudent(groupId, id);
     }
 
-    @PutMapping ("/{groupId}/group/student/{id}/remove")
+    @GetMapping("/{groupNumber}/get_assigned_students")
+    public ResponseEntity<?> getAssignedStudents (@PathVariable Integer groupNumber) {
+        return new ResponseEntity<>(groupService.getAssignedStudents(groupNumber), HttpStatus.OK);
+    }
+
+    @PostMapping ("/{groupId}/remove_student/{id}")
     public Group removeStudent(
             @PathVariable int groupId,
             @PathVariable int id
