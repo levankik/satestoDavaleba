@@ -76,7 +76,6 @@ public class TeacherServiceImpl implements StudentAndTeacherService<Teacher> {
             if (params.getGroupNumber() != null) {
                 Join<Teacher, Group>  teachers = root.join("group", JoinType.LEFT);
                 predicate = cb.and(predicate, cb.equal(teachers.get(" ").get("groupNumber"), params.getGroupNumber()));
-//                  predicate = cb.and(predicate, cb.equal(root.get("groupNumber"), params.getGroupNumber()));
             }
             return predicate;
         }, pageable);

@@ -33,16 +33,18 @@ public class Group {
     @Range(min = 1, max = 200) // my faculty group numbers were three-digit
     private int groupNumber;
 
-//    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "group_teacher",
-           joinColumns = @JoinColumn(name = "group_id"),
-           inverseJoinColumns = @JoinColumn(name = "teacher_id")
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "teacher_id")
     )
     private Set<Teacher> assignedTeachers = new HashSet<>();
 
-//    @JsonIgnore
-    @OneToMany (mappedBy = "group", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @OneToMany
+    @JoinTable(name = "group_student",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "student_id")
+    )
     private Set<Student> assignedStudents = new HashSet<>();
 
 }

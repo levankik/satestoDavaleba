@@ -71,54 +71,46 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Group assignTeacher(int groupNumber, int id) {
-        Set<Teacher> teacherSet = null;
+    public Group assignToGroup(int groupNumber, String persons, int id) {
         Group group = groupRepository.findByGroupNumber(groupNumber)
                 .orElseThrow(() -> new NotFoundException("Group is not found"));
-        Teacher teacher = teacherRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Teacher is not found"));
-        teacherSet = group.getAssignedTeachers();
-        teacherSet.add(teacher);
-        group.setAssignedTeachers(teacherSet);
+        if (persons.equals("teachers")) {
+            Set<Teacher> teacherSet = null;
+            Teacher teacher = teacherRepository.findById(id)
+                    .orElseThrow(() -> new NotFoundException("Teacher is not found"));
+            teacherSet = group.getAssignedTeachers();
+            teacherSet.add(teacher);
+            group.setAssignedTeachers(teacherSet);
+        } else {
+            Set<Student> studentSet = null;
+            Student student = studentRepository.findById(id)
+                    .orElseThrow(() -> new NotFoundException("Student is not found"));
+            studentSet = group.getAssignedStudents();
+            studentSet.add(student);
+            group.setAssignedStudents(studentSet);
+        }
         return groupRepository.save(group);
     }
 
     @Override
-    public Group removeTeacher(int groupNumber, int id) {
-        Set<Teacher> teacherSet = null;
+    public Group removeFromGroup(int groupNumber, String persons, int id) {
         Group group = groupRepository.findByGroupNumber(groupNumber)
                 .orElseThrow(() -> new NotFoundException("Group is not found"));
-        Teacher teacher = teacherRepository.findById(id).
-                orElseThrow(() -> new NotFoundException("Teacher is not found"));
-        teacherSet = group.getAssignedTeachers();
-        teacherSet.remove(teacher);
-        group.setAssignedTeachers(teacherSet);
-        return groupRepository.save(group);
-    }
-
-    @Override
-    public Group assignStudent(int groupId, int id) {
-        Set<Student> studentSet = null;
-        Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new NotFoundException("Group is not found"));
-        Student student = studentRepository.findById(id).
-                orElseThrow(() -> new NotFoundException("Student is not found"));
-        studentSet = group.getAssignedStudents();
-        studentSet.add(student);
-        group.setAssignedStudents(studentSet);
-        return groupRepository.save(group);
-    }
-
-    @Override
-    public Group removeStudent(int groupId, int id) {
-        Set<Student> studentSet = null;
-        Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new NotFoundException("Group is not found"));
-        Student student = studentRepository.findById(id).
-                orElseThrow(() -> new NotFoundException("Student is not found"));
-        studentSet = group.getAssignedStudents();
-        studentSet.remove(student);
-        group.setAssignedStudents(studentSet);
+        if (persons.equals("teachers")) {
+            Set<Teacher> teacherSet = null;
+            Teacher teacher = teacherRepository.findById(id).
+                    orElseThrow(() -> new NotFoundException("Teacher is not found"));
+            teacherSet = group.getAssignedTeachers();
+            teacherSet.remove(teacher);
+            group.setAssignedTeachers(teacherSet);
+        } else {
+            Set<Student> studentSet = null;
+            Student student = studentRepository.findById(id).
+                    orElseThrow(() -> new NotFoundException("Student is not found"));
+            studentSet = group.getAssignedStudents();
+            studentSet.remove(student);
+            group.setAssignedStudents(studentSet);
+        }
         return groupRepository.save(group);
     }
 
@@ -128,7 +120,7 @@ public class GroupServiceImpl implements GroupService {
         Group group = groupRepository.findByGroupNumber(groupNumber)
                 .orElseThrow(() -> new NotFoundException("Group is not found"));
         teacherSet = group.getAssignedTeachers();
-        System.out.println("TeacherSetPrint" +  teacherSet);
+        System.out.println("TeacherSetPrint" + teacherSet);
         return teacherSet;
     }
 

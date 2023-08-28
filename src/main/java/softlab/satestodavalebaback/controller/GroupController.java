@@ -47,50 +47,30 @@ public class GroupController {
         return groupService.getAll(params, PageRequest.of(page, size));
     }
 
-    @PostMapping ("/{groupNumber}/teachers/save/{id}")
-    public Group assignTeacher(
+    @PostMapping ("/{groupNumber}/{persons}/save/{id}")
+    public Group assignToGroup(
             @PathVariable int groupNumber,
+            @PathVariable String persons,
             @PathVariable int id
     ) {
-        return groupService.assignTeacher(groupNumber, id);
+        return groupService.assignToGroup(groupNumber, persons, id);
     }
 
-    @GetMapping("/{groupNumber}/teachers")
-    public ResponseEntity<?> getAssignedTeachers (@PathVariable Integer groupNumber) {
-        return new ResponseEntity<>(groupService.getAssignedTeachers(groupNumber), HttpStatus.OK);
-    }
-
-    @PostMapping ("/{groupNumber}/teachers/remove/{id}")
-    public Group removeTeacher(
+    @PostMapping ("/{groupNumber}/{persons}/remove/{id}")
+    public Group removeFromGroup(
             @PathVariable int groupNumber,
+            @PathVariable String persons,
             @PathVariable int id
     ) {
-        return groupService.removeTeacher(groupNumber, id);
+        return groupService.removeFromGroup(groupNumber, persons, id);
     }
 
-//    (API_URL + destination  + "/remove/" + id)
-
-    @PostMapping ("/{groupId}/save_student/{id}")
-    public Group assignStudent(
-            @PathVariable int groupId,
-            @PathVariable int id
-    ) {
-        return groupService.assignStudent(groupId, id);
+    @GetMapping("/{groupNumber}/{persons}")
+    public ResponseEntity<?> getAssignedPersons (@PathVariable Integer groupNumber,
+                                                 @PathVariable String persons) {
+        return (persons.equals("teachers")) ?
+                new ResponseEntity<>(groupService.getAssignedTeachers(groupNumber), HttpStatus.OK):
+                new ResponseEntity<>(groupService.getAssignedStudents(groupNumber), HttpStatus.OK);
     }
-
-    @GetMapping("/{groupNumber}/get_assigned_students")
-    public ResponseEntity<?> getAssignedStudents (@PathVariable Integer groupNumber) {
-        return new ResponseEntity<>(groupService.getAssignedStudents(groupNumber), HttpStatus.OK);
-    }
-
-    @PostMapping ("/{groupId}/remove_student/{id}")
-    public Group removeStudent(
-            @PathVariable int groupId,
-            @PathVariable int id
-    ) {
-        return groupService.removeStudent(groupId, id);
-    }
-
-
 
 }

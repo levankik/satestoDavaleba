@@ -10,7 +10,6 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Getter
@@ -51,5 +50,4 @@ public class Student {
     @ManyToOne
     @JoinColumn(name = "group_id", referencedColumnName = "id")
     private Group group;
-
 }

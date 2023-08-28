@@ -1,11 +1,9 @@
 package softlab.satestodavalebaback.service;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import softlab.satestodavalebaback.DTO.SearchParams;
 import softlab.satestodavalebaback.entity.Group;
-import softlab.satestodavalebaback.entity.Teacher;
 
 import java.util.Set;
 
@@ -21,13 +19,9 @@ public interface GroupService {
 
     Page<?> getAll (SearchParams params, Pageable pageable);
 
-    Group assignTeacher(int groupId, int id);
+    Group assignToGroup(int groupId, String persons, int id);
 
-    Group removeTeacher(int groupNumber, int id);
-
-    Group assignStudent(int groupId, int id);
-
-    Group removeStudent(int groupNumber, int id);
+    Group removeFromGroup(int groupNumber, String persons, int id);
 
     Set<?> getAssignedTeachers(Integer groupNumber);
 
