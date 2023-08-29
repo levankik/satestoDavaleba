@@ -50,10 +50,10 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public Group getById(int id) {
         if (id < 1) {
-            throw new InvalidParameterException("Is must be positive integer");
+            throw new InvalidParameterException("Id must be a positive integer");
         }
         return groupRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Group not found"));
+                .orElseThrow(() -> new NotFoundException("Group is not found"));
     }
 
     @Override
