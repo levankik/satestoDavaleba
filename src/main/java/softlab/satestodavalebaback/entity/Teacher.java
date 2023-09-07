@@ -10,7 +10,7 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,6 +21,7 @@ import java.util.Set;
 @SequenceGenerator(name = "teacherIdGenerator", sequenceName = "teachers_id_seq", allocationSize = 1)
 
 public class Teacher {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "teacherIdGenerator")
