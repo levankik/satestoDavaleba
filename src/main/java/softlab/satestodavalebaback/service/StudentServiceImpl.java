@@ -5,8 +5,6 @@ import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import softlab.satestodavalebaback.DTO.SearchParams;
 import softlab.satestodavalebaback.entity.Group;
@@ -15,6 +13,7 @@ import softlab.satestodavalebaback.exeption.NotFoundException;
 import softlab.satestodavalebaback.repository.StudentRepository;
 
 import java.security.InvalidParameterException;
+import java.util.List;
 
 
 @Service
@@ -57,7 +56,7 @@ public class StudentServiceImpl implements StudentAndTeacherService<Student> {
     }
 
     @Override
-    public Page<Student> getAll(SearchParams params, Pageable pageable) {
+    public List<Student> getAll(SearchParams params) {
         return studentRepository.findAll((root, query, cb) -> {
             Predicate predicate = cb.conjunction();
             if (StringUtils.isNotEmpty(params.getName())) {
@@ -77,8 +76,6 @@ public class StudentServiceImpl implements StudentAndTeacherService<Student> {
                 predicate = cb.and(predicate, cb.equal(root.get("group"), params.getGroupNumber()));
             }
             return predicate;
-        }, pageable);
+        });
     }
-
-
 }

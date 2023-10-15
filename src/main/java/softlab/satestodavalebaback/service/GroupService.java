@@ -1,10 +1,9 @@
 package softlab.satestodavalebaback.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import softlab.satestodavalebaback.DTO.SearchParams;
 import softlab.satestodavalebaback.entity.Group;
 
+import java.util.List;
 import java.util.Set;
 
 public interface GroupService {
@@ -17,7 +16,7 @@ public interface GroupService {
 
     Group  getById(int id);
 
-    Page<?> getAll (SearchParams params, Pageable pageable);
+    List<?> getAll (SearchParams params);
 
     Group assignToGroup(int groupId, String persons, int id);
 

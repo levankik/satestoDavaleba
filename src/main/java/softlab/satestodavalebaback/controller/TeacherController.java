@@ -1,8 +1,6 @@
 package softlab.satestodavalebaback.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +8,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import softlab.satestodavalebaback.DTO.SearchParams;
 import softlab.satestodavalebaback.entity.Teacher;
 import softlab.satestodavalebaback.service.StudentAndTeacherService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/teachers")
@@ -40,10 +40,16 @@ public class TeacherController {
         return new ResponseEntity<>(studentAndTeacherService.getById(id), HttpStatus.OK);
     }
 
+//    @GetMapping("")
+//    public Page<?> getAll(SearchParams params, @RequestParam(required = false, defaultValue = "0") int page,
+//                                               @RequestParam(required = false, defaultValue = "10") int size) {
+//        return studentAndTeacherService.getAll(params, PageRequest.of(page, size));
+//    }
+
     @GetMapping("")
-    public Page<?> getAll(SearchParams params, @RequestParam(required = false, defaultValue = "0") int page,
-                                               @RequestParam(required = false, defaultValue = "10") int size) {
-        return studentAndTeacherService.getAll(params, PageRequest.of(page, size));
+    public List<?> getAll(SearchParams params) {
+        return studentAndTeacherService.getAll(params);
     }
+
 
 }

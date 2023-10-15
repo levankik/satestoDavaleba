@@ -8,8 +8,7 @@ import softlab.satestodavalebaback.entity.Group;
 import java.util.Optional;
 
 public interface GroupRepository extends JpaRepository<Group, Integer>,
-                                         JpaSpecificationExecutor<Group>,
-                                         PagingAndSortingRepository<Group, Integer> {
+                                         JpaSpecificationExecutor<Group>{
     Optional<Group> findByGroupNumber(int groupNumber);
     Optional<Group> findById(int id);
 }

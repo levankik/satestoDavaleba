@@ -1,8 +1,8 @@
 package softlab.satestodavalebaback.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import softlab.satestodavalebaback.DTO.SearchParams;
+
+import java.util.List;
 
 public interface StudentAndTeacherService<T> {
     T add (T t);
@@ -13,7 +13,7 @@ public interface StudentAndTeacherService<T> {
 
     T  getById (int id);
 
-    Page<T> getAll (SearchParams params, Pageable pageable);
+    List<T> getAll (SearchParams params);
 }
 
 
