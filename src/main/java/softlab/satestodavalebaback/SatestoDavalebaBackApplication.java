@@ -6,8 +6,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
-
-
 @OpenAPIDefinition(
 		info = @Info(
 				title = "SatestoDavalebaBack",
@@ -15,10 +13,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 				description = "SatestoDavalebaBack API"
 		)
 )
+
 @SpringBootApplication
 public class SatestoDavalebaBackApplication {
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(SatestoDavalebaBackApplication.class, args);
 	}
 
